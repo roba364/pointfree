@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <playground version='6.0' target-platform='ios' buildActiveScheme='true' importAppTypes='true'>
     <pages>
+        <page name='Contravariance'/>
+        <page name='The many faces of Map'/>
+        <page name='Tagged'/>
+        <page name='Composition without Operators'/>
+        <page name='Tale of two flayMaps'/>
+        <page name='Getters and Keypaths'/>
         <page name='Functional Setters'/>
         <page name='Higher Order Functions'/>
         <page name='UIKit Styling with functions'/>
