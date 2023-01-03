@@ -11,18 +11,21 @@ let usersJson = """
 {
 "id": 1,
 "name": "Brandon",
+"age": 32,
 "email": "brandon@pointfree.co",
 "subscriptionId": 1
 },
 {
 "id": 2,
 "name": "Stephen",
+"age": 22,
 "email": "stephen@pointfree.co",
 "subscriptionId": null
 },
 {
 "id": 3,
 "name": "Blob",
+"age": 10,
 "email": "blob@pointfree.co",
 "subscriptionId": 1
 }
@@ -71,14 +74,17 @@ struct Subscription: Decodable {
 
 enum EmailTag { }
 typealias Email = Tagged<EmailTag, String>
+enum AgeTag { }
 
 // "email": { "email": String }
 // Subscription.init(from: Decoder)
 
 struct User: Decodable {
     typealias ID = Tagged<User, Int>
+    typealias AGE = Tagged<User, Int>
 
     let id: ID
+    let age: AGE
     let name: String
     let email: Email
     let subscriptionId: Subscription.ID?
@@ -106,14 +112,55 @@ extension Tagged: ExpressibleByIntegerLiteral where RawValue: ExpressibleByInteg
     typealias IntegerLiteralType = RawValue.IntegerLiteralType
 }
 
-User(id: .init(rawValue: 1),
+extension Tagged: ExpressibleByUnicodeScalarLiteral where RawValue: ExpressibleByUnicodeScalarLiteral {
+    typealias UnicodeScalarLiteralType = RawValue.UnicodeScalarLiteralType
+
+    init(unicodeScalarLiteral value: RawValue.UnicodeScalarLiteralType) {
+        self.init(rawValue: RawValue(unicodeScalarLiteral: value))
+    }
+}
+
+extension Tagged: ExpressibleByExtendedGraphemeClusterLiteral where RawValue: ExpressibleByExtendedGraphemeClusterLiteral {
+    init(extendedGraphemeClusterLiteral value: RawValue.ExtendedGraphemeClusterLiteralType) {
+        self.init(rawValue: RawValue(extendedGraphemeClusterLiteral: value))
+    }
+
+    typealias ExtendedGraphemeClusterLiteralType = RawValue.ExtendedGraphemeClusterLiteralType
+}
+
+extension Tagged: ExpressibleByStringLiteral where RawValue: ExpressibleByStringLiteral {
+    typealias StringLiteralType = RawValue.StringLiteralType
+
+    init(stringLiteral value: StringLiteralType) {
+        self.init(rawValue: RawValue(stringLiteral: value))
+    }
+}
+
+extension Tagged: Comparable where RawValue: Comparable {
+    static func < (lhs: Tagged<Tag, RawValue>, rhs: Tagged<Tag, RawValue>) -> Bool {
+        return lhs.rawValue == rhs.rawValue
+    }
+}
+
+let son = User(id: .init(rawValue: 1),
+     age: 32,
      name: "Rob",
      email: .init(rawValue: "rob@gmail.com"),
      subscriptionId: .init(rawValue: 123))
 
 // ExpressibleByIntegerLiteral
 
-User(id: 1,
+let serj = User(id: 1,
+     age: 32,
      name: "Rob",
-     email: .init(rawValue: "rob@gmail.com"),
+     email: "rob@gmail.com",
      subscriptionId: 12345)
+
+var users1 = users
+
+users1.sort(by: { $0.id > $1.id })
+
+serj.age
+
+let above15 = users.map { $0.age }
+above15
