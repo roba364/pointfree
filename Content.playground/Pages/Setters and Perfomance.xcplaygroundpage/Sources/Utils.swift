@@ -1,3 +1,5 @@
+import Foundation
+
 @_exported import Foundation
 
 precedencegroup ForwardApplication {
