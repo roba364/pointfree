@@ -13,9 +13,9 @@ public enum Result<Value, Error> {
     case failure(Error)
 }
 
-//protocol GitHubProtocol {
-//  func fetchRepos(onComplete completionHandler: (@escaping (Result<[GitHub.Repo], Error>) -> Void))
-//}
+protocol GitHubProtocol {
+  func fetchRepos(onComplete completionHandler: (@escaping (Result<[GitHub.Repo], Error>) -> Void))
+}
 public struct GitHub { //}: GitHubProtocol {
     public struct Repo: Decodable {
         var archived: Bool
